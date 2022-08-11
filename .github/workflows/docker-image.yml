@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 env:
-  IMAGE_NAME: line-stricker-web-scraping
+  IMAGE_NAME: line-sticker-web-scraping
 
 jobs:
 
@@ -21,5 +21,10 @@ jobs:
     - name: Build image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME
     
+    - id: repository_owner
+      uses: ASzc/change-string-case-action@v2
+      with:
+        string: ${{ github.repository_owner }}
+    
     - name: Push image
-      run: docker push ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:${{ github.run_id }}
+      run: docker push ghcr.io/${{ steps.repository_owner.outputs.lowercase }}/$IMAGE_NAME:${{ github.run_id }}
