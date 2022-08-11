@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  IMAGE_NAME: line-stricker-web-scraping
+
 jobs:
 
   build:
@@ -14,5 +17,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    
+    - name: Build image
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME
+    
+    - name: Push image
+      run: docker push ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:${{ github.run_id }}
