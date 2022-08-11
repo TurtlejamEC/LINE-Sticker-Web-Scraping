@@ -8,7 +8,6 @@ from PIL import Image
 
 # Get html
 url = sys.argv[1]
-url = "https://store.line.me/stickershop/product/14611718/en"
 req = requests.get(url)
 content = req.text
 
@@ -37,5 +36,3 @@ for index, sticker_element in enumerate(sticker_elements):
 
     file_name = str(index) + ".gif"
     apng.save(file_name, loop=0, disposal=2, save_all=True)
-
-
