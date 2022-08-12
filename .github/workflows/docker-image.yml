@@ -30,11 +30,18 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Build image
-      run: |
-        CONTAINER=ghcr.io/${{ steps.repository_owner.outputs.lowercase }}/$IMAGE_NAME:${{ github.run_id }}
-        echo "$CONTAINER"
-        docker build . --tag "$CONTAINER"
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
     
-    - name: Push image
-      run: docker push "$CONTAINER"
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ghcr.io/${{ github.repository }}
+    
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
