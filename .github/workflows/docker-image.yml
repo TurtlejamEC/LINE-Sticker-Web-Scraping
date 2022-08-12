@@ -18,13 +18,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Build image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME
-    
     - id: repository_owner
       uses: ASzc/change-string-case-action@v2
       with:
         string: ${{ github.repository_owner }}
     
+    - name: Build image
+      run: |
+        CONTAINER=ghcr.io/${{ steps.repository_owner.outputs.lowercase }}/$IMAGE_NAME:${{ github.run_id }}
+        docker build . --file Dockerfile --tag $CONTAINER
+    
     - name: Push image
-      run: docker push ghcr.io/${{ steps.repository_owner.outputs.lowercase }}/$IMAGE_NAME:${{ github.run_id }}
+      run: docker push $CONTAINER
