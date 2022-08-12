@@ -34,7 +34,7 @@ jobs:
       run: |
         CONTAINER=ghcr.io/${{ steps.repository_owner.outputs.lowercase }}/$IMAGE_NAME:${{ github.run_id }}
         echo "$CONTAINER"
-        docker build . --file Dockerfile --tag $CONTAINER
+        docker build . --tag "$CONTAINER"
     
     - name: Push image
-      run: docker push $CONTAINER
+      run: docker push "$CONTAINER"
